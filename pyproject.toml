@@ -1,0 +1,12 @@
+[project]
+name = "link-windbell-uno"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.140.13",
+    "psycopg2-binary>=2.9.12",
+    "python-dotenv>=1.2.2",
+    "uvicorn>=0.52.0",
+]
