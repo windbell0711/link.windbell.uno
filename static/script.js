@@ -1,6 +1,17 @@
 const path = window.location.pathname;
-const code = path.substring(1); // 去掉开头的 '/'
-if (code) {
+
+if (path.startsWith("/permanent/")) {
+    const code = path.substring(11);
+    if (code) {
+        permanentRedirect(code);
+    } else {
+        document.body.innerHTML = `<h2>请在浏览器地址栏输入链接</h2>`;
+    }
+} else {
+    document.body.innerHTML = `<h2>只接受permanent链接</h2>`;
+}
+
+function permanentRedirect(code) {
     fetch(`/api/redirect?code=${encodeURIComponent(code)}`)
         .then(res => res.json())
         .then(data => {
@@ -11,6 +22,4 @@ if (code) {
             }
         })
         .catch(() => document.body.innerHTML = `<h2>服务异常，请稍后重试</h2>`);
-} else {
-    document.body.innerHTML = `<h2>请在浏览器地址栏输入链接</h2>`;
 }
