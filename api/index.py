@@ -48,6 +48,6 @@ import asyncpg
 
 app = FastAPI()
 
-@app.get("/redirect")
+@app.get("/api/redirect")
 def redirect(code: str):
     return {"valid": True, "url": "https://cn.bing.com/search?q=%s" % code}
