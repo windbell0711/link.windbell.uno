@@ -1,7 +1,18 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.py" },
-    { "source": "/permanent/:code", "destination": "/static/redirect.html?code=:code" },
-    { "source": "/", "destination": "/static/homepage.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/",
+      "destination": "/static/homepage.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/permanent/:code",
+      "destination": "/static/redirect.html?code=:code"
+    }
   ]
 }
