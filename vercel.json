@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/premanent/:code", "destination": "/static/redirect?code=:code" },
     { "source": "/", "destination": "/static/homepage" }
   ]
 }
