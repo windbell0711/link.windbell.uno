@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>redirect</title>
+</head>
+<body>
+    <p>redirect</p>
+</body>
+<script>
+    const code = new URLSearchParams(window.location.search).get("code");
+
+    fetch(`http://127.0.0.1:8000/api/redirect?code=${encodeURIComponent(code)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.valid) {
+                window.location.href = data.url;
+            } else {
+                document.body.innerHTML = `<h2>链接无效或已过期</h2>`;
+            }
+        })
+        .catch(() => document.body.innerHTML = `<h2>服务异常，请联系开发者</h2>`);
+</script>
+</html>

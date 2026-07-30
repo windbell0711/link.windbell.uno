@@ -5,6 +5,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 import asyncpg
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # @asynccontextmanager
 # async def lifespan(app: FastAPI):
 #     app.state.pool = await asyncpg.create_pool(
@@ -47,6 +49,13 @@ import asyncpg
 #         return {"valid": True, "url": row["target_url"]}
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500"],  # 开发环境
+    allow_methods=["GET"],
+    allow_credentials=True,
+)
 
 @app.get("/api/redirect")
 def redirect(code: str):
