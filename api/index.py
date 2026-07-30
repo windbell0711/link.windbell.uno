@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import asyncpg
 
 dotenv.load_dotenv()
+assert getenv("DATABASE_URL"), "DATABASE_URL environment variable not set."
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
