@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>redirect</title>
+</head>
+<body>
+    <p>redirect</p>
+</body>
+<script>
+    const code = new URLSearchParams(window.location.search).get("code");
+    const root = window.location.host === "127.0.0.1:5500" ? "http://127.0.0.1:8000" : "";
+    window.location.href = root + "/api/redirect?code=" + encodeURIComponent(code);
+</script>
+</html>

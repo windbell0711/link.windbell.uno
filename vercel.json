@@ -2,6 +2,6 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.py" },
     { "source": "/permanent/:code", "destination": "/static/redirect?code=:code" },
-    { "source": "/", "destination": "/static/homepage" }
+    { "source": "/", "destination": "/static/homepage.html" }
   ]
 }
