@@ -8,7 +8,19 @@
 <body>
     <main>
         <h1>homepage</h1>
-        <div class="main-container" id="msg">Loading ...</div>
+        <div class="main-container">
+            <form class="go-form">
+                <input id="code" placeholder="输入 取件码(code) 以启动 重定向(redirect)" required>
+                <button type="submit">重定向</button>
+            </form>
+        </div>
     </main>
 </body>
+<script>
+    document.querySelector(".go-form").addEventListener("submit", e => {
+        e.preventDefault();
+        const code = document.getElementById("code").value.trim();
+        if (code) location.href = "redirect.html?code=" + encodeURIComponent(code);
+    });
+</script>
 </html>
