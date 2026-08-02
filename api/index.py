@@ -19,7 +19,6 @@ class PgLink(BaseModel):
     access_lastdate: date
     access_daylmt: int = 0
     access_daycnt: int = 5
-    is_oss: bool = False
     date_begin: date | None = None
     date_end: date | None = None
 
@@ -48,7 +47,8 @@ app.add_middleware(
 )
 
 @app.get("/api/redirect")
-async def redirect(code: str):
+async def redirect(code: str) -> dict:
+    """返回值：{"valid": bool, "url": "重定向链接", "msg": "错误信息"}"""
     pool: asyncpg.pool.Pool = app.state.pool
     async with pool.acquire() as conn:
         # 查询数据库
@@ -74,12 +74,14 @@ async def redirect(code: str):
             await conn.execute(
                 "UPDATE link SET access_daycnt = 1, access_lastdate = $2 WHERE code = $1", code, today()
             )
-        # 特判是否为oss链接，生成预签名临时链接返回给前端重定向
-        ret_url = link.url
-        if link.is_oss:
-            import oss
-            ret_url = oss.get_oss_url("wint-storage-1", object_key=link.url)
-            if not ret_url:
-                return {"valid": False, "msg": "oss链接生成失败"}
         # 返回重定向链接
-        return {"valid": True, "url": ret_url}
+        return {"valid": True, "url": link.url, "msg": "成功找到有效链接"}
+
+@app.get("/api/storage")
+async def storage(key: str) -> dict:
+    """返回值：{"valid": bool, "url": "带预签名的oss链接", "msg": "错误信息"}"""
+    import api.oss as oss
+    ret = oss.get_oss_url("wint-storage-1", object_key=key)
+    if not ret:
+        return {"valid": False, "msg": "预签名oss链接生成失败"}
+    return {"valid": True, "url": ret, "msg": "成功生成带预签名的oss链接"}
