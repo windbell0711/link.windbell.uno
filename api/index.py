@@ -66,7 +66,7 @@ async def redirect(code: str) -> dict:
         # 校验链接是否次数已达上限，更新访问次数
         if link.access_lastdate == today():
             if link.access_daylmt > 0 and link.access_daycnt >= link.access_daylmt:
-                return {"valid": False, "msg": "链接访问次数已达上限"}
+                return {"valid": False, "msg": "链接当日访问次数已达上限"}
             await conn.execute(
                 "UPDATE link SET access_daycnt = access_daycnt + 1 WHERE code = $1", code
             )
