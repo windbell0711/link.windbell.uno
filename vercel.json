@@ -13,6 +13,10 @@
     {
       "source": "/permanent/:code",
       "destination": "/static/redirect.html?code=:code"
+    },
+    {
+      "source": "/oss/:key",
+      "destination": "/static/storage.html?key=:key"
     }
   ]
 }
