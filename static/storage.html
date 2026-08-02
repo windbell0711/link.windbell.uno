@@ -3,27 +3,81 @@
 <head>
     <meta charset="utf-8">
     <title>storage</title>
+    <style>
+        #view {
+            width: 640px;
+            height: 480px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            background: #f5f5f5;
+        }
+        #view video, #view img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        #view pre {
+            margin: 0;
+            padding: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+    </style>
 </head>
 <body>
     <p>storage</p>
+    <div id="view"></div>
 </body>
 <script>
     const key = new URLSearchParams(window.location.search).get("key");
     const root = window.location.host === "127.0.0.1:5500" ? "http://127.0.0.1:8000" : "";
+    const VIDEO_EXT = ["mp4", "webm", "ogv", "mov", "m4v"];
+    const IMAGE_EXT = ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg", "avif"];
+    const TEXT_EXT = ["txt", "md", "log", "csv", "json", "js", "css", "html", "xml", "yaml", "yml"];
+    const view = document.getElementById("view");
+
+    function showError(msg) {
+        const h2 = document.createElement("h2");
+        h2.textContent = msg;
+        view.appendChild(h2);
+    }
+
     fetch(root + "/api/storage?key=" + encodeURIComponent(key))
         .then(res => res.json())
         .then(data => {
+            const ext = (key || "").split(".").pop().toLowerCase();
             if (data.valid) {
-                const videoElement = document.createElement('video');
-                videoElement.src = data.url;
-                videoElement.controls = true;
-                document.body.appendChild(videoElement);
+                // 视频
+                if (VIDEO_EXT.includes(ext)) {
+                    const video = document.createElement("video");
+                    video.src = data.url;
+                    video.controls = true;
+                    view.appendChild(video);
+                // 图片
+                } else if (IMAGE_EXT.includes(ext)) {
+                    const img = document.createElement("img");
+                    img.src = data.url;
+                    img.alt = "image";
+                    view.appendChild(img);
+                // 文本
+                } else if (TEXT_EXT.includes(ext)) {
+                    fetch(data.url)
+                        .then(res => res.text())
+                        .then(text => {
+                            const pre = document.createElement("pre");
+                            pre.textContent = text;
+                            view.appendChild(pre);
+                        })
+                        .catch(() => showError("文本内容读取失败"));
+                } else {
+                    showError("不支持的格式：" + (ext || "未知"));
+                }
             } else {
-                const h2 = document.createElement('h2');
-                h2.textContent = data.msg;
-                document.body.appendChild(h2);
+                showError(data.msg);
             }
         })
-        .catch(() => document.body.innerHTML = "<h2>服务异常，请联系开发者</h2>");
+        .catch(() => showError("服务异常，请联系开发者"));
 </script>
 </html>
