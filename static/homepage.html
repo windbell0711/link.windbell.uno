@@ -20,7 +20,7 @@
     document.querySelector(".go-form").addEventListener("submit", e => {
         e.preventDefault();
         const code = document.getElementById("code").value.trim();
-        if (code) location.href = "redirect.html?code=" + encodeURIComponent(code);
+        if (code) location.href = "/static/redirect.html?code=" + encodeURIComponent(code);
     });
 </script>
 </html>
